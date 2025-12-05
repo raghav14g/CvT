@@ -157,14 +157,52 @@ _C.SWA.START_EPOCH = 50
 _C.SWA.LR_FACTOR = 0.05
 _C.SWA.ANNEAL_EPOCHS = 10
 
-# 1. Update MODEL.NAME default:
-_C.MODEL.NAME = 'VanillaCNN' # Set the default model name to the new CNN
+# 1. Define all missing Top-Level Nodes (Critical Fix)
+_C.SYSTEM = CN() 
+_C.OUTPUT = CN()
+_C.DISTRIBUTED = CN()
+_C.CHECKPOINT = CN() # <--- Must be defined before its sub-keys are set
 
-# 2. Add a new CNN_SPEC block (required since MODEL.SPEC is structured for CvT)
-# This uses the common CNN structure parameters (depths and channels per stage)
+# 2. CNN-Specific Configuration Node (Crucial for your new model)
 _C.CNN_SPEC = CN()
-_C.CNN_SPEC.DEPTHS = [2, 2, 2, 2]         # Number of blocks in each of the 4 stages
-_C.CNN_SPEC.CHANNELS = [64, 64, 128, 256, 512] # Channels: C0(stem output), C1, C2, C3, C4
+_C.CNN_SPEC.DEPTHS = [2, 2, 2, 2]         # Blocks per stage (e.g., ResNet-18)
+_C.CNN_SPEC.CHANNELS = [64, 64, 128, 256, 512] # Channels: Stem output, Stage 1-4
+
+# 3. Model Configuration Updates
+_C.MODEL.NAME = 'VanillaCNN' # Default name
+# ... (Other model parameters) ...
+
+# 4. DATA Configuration Updates
+_C.DATA.DATASET = 'imagenet'
+_C.DATA.BATCH_SIZE = 64
+_C.DATA.CROP_PCT = 0.875
+_C.DATA.IMG_SIZE = 224
+_C.DATA.PIN_MEMORY = True    # Fixes likely error
+_C.DATA.SHUFFLE = True
+
+# 5. TRAIN Configuration Updates
+_C.TRAIN.EPOCHS = 100
+_C.TRAIN.LR = 0.01
+_C.TRAIN.SCHEDULER = 'cosine' # Used by the script logic
+_C.TRAIN.OPTIMIZER = 'sgd'
+_C.TRAIN.MOMENTUM = 0.9
+_C.TRAIN.WEIGHT_DECAY = 0.0001
+_C.TRAIN.WARMUP_EPOCHS = 5
+
+# Nested LR_SCHEDULER structure (Fixes AttributeError: METHOD)
+_C.TRAIN.LR_SCHEDULER = CN()
+_C.TRAIN.LR_SCHEDULER.METHOD = 'cosine'
+_C.TRAIN.LR_SCHEDULER.DECAY_RATE = 0.1
+_C.TRAIN.LR_SCHEDULER.DECAY_EPOCHS = 30
+
+# 6. VALIDATION Configuration Updates
+_C.VALIDATION.VALIDATION_START_EPOCH = 0
+_C.VALIDATION.BATCH_SIZE = 64
+_C.VALIDATION.IMG_SIZE = 224
+
+# 7. CHECKPOINT Configuration Updates
+_C.CHECKPOINT.RESUME_FROM = '' 
+_C.CHECKPOINT.AUTO_RESUME = False # Fixes likely error
 
 def _update_config_from_file(config, cfg_file):
     config.defrost()
