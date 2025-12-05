@@ -62,7 +62,19 @@ def main():
 
     init_distributed(args)
     setup_cudnn(config)
+# 71: print("\n--- MODEL ARCHITECTURE CONFIRMATION ---")
 
+    if config.MODEL.NAME in ['CvT', 'ViT']:
+        # Existing transformer-specific print statements
+        stage0_spec = config.MODEL.SPEC.STAGES[0] 
+        print(f"Initial Patch Size: {stage0_spec.PATCH_SIZE[0]}")
+        print(f"Initial Dim Embed: {stage0_spec.DIM_EMBED[0]}")
+        print(f"Initial Depth: {stage0_spec.DEPTH[0]}")
+    else:
+        # Print CNN-specific info instead
+        print(f"Model Name: {config.MODEL.NAME}")
+        print(f"CNN Channels: {config.CNN_SPEC.CHANNELS}")
+        print(f"CNN Depths: {config.CNN_SPEC.DEPTHS}")
     update_config(config, args)
     final_output_dir = create_logger(config, args.cfg, 'train')
     tb_log_dir = final_output_dir
