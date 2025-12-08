@@ -623,8 +623,8 @@ class ConvolutionalVisionTransformer(nn.Module):
         return x
 
 
-@register_model
-def get_cls_model(config, **kwargs):
+@MODEL_REGISTRY.register_model
+def cls_cvt(config, **kwargs):
     msvit_spec = config.MODEL.SPEC
     msvit = ConvolutionalVisionTransformer(
         in_chans=3,
