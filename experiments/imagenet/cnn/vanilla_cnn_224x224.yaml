@@ -1,5 +1,5 @@
 # experiments/imagenet/cnn/vanilla_cnn_224x224.yaml
-
+OUTPUT_DIR: 'OUTPUT/'
 MODEL:
   NAME: 'vanilla_cnn'
   NUM_CLASSES: 200 # Assuming Tiny ImageNet
