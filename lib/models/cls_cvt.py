@@ -16,7 +16,7 @@ from einops.layers.torch import Rearrange
 
 from timm.models.layers import DropPath, trunc_normal_
 
-from .registry import register_model
+#from .registry import register_model
 from .builder import MODEL_REGISTRY # Corrected import
 
 # From PyTorch internals
