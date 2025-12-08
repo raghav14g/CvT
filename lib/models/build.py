@@ -4,7 +4,7 @@ from .registry import is_model
 
 # Import all models here to register them with the MODEL_REGISTRY
 from .vanilla_cnn import vanilla_cnn 
-from .cls_cvt import get_cls_model
+from .cls_cvt import cls_cvt
 # The build_model function is imported from the builder
 from .builder import build_model
 #CNN-Added
